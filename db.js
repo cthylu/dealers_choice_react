@@ -18,7 +18,8 @@ const Game = db.define('game', {
         allowNull: false
     },
     year: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
     }
 });
 

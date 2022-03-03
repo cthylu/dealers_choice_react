@@ -1,9 +1,14 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 
 class Main extends React.Component {
+    constructor() {
+        super();
+    }
     render() {
         return (
-            <main id="main">
+            <div>
+                <h1>Fire Emblem Heroes</h1>
                 <table>
                     <tbody>
                         <tr>
@@ -12,11 +17,13 @@ class Main extends React.Component {
                             <th>Game</th>
                         </tr>
                         {
-                            
+
                         }
                     </tbody>
                 </table>
-            </main>
-        )
+            </div>
+        );
     }
 }
+const root = document.querySelector('#root');
+ReactDOM.render(<Main />, root);

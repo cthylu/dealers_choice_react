@@ -4,6 +4,8 @@ const path = require('path');
 const {db, seedDb, Hero, Game} = require('./db');
 const port = 3000;
 
+app.use('/client', express.static(path.join(__dirname, '.', 'client')));
+
 app.get('/api/heroes', async(req, res, next) => {
     try {
         res.send(await Hero.findAll());
@@ -19,7 +21,7 @@ app.get('/', async(req, res, next) => {
 async function start() {
     try {
         await db.authenticate();
-        await seedDb();
+        await seedDb(); 
         app.listen(port, function() {
             console.log(`Listening on port ${port}!`);
         })
