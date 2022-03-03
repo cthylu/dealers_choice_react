@@ -26,6 +26,14 @@ const Game = db.define('game', {
 Hero.belongsTo(Game);
 Game.hasMany(Hero);
 
+Hero.getGameName = function () {
+    return this.findAll( {
+        include: [
+            {model: Game}
+        ]
+    })
+}
+
 async function seedDb() {
     try {
         await db.sync({force: true});

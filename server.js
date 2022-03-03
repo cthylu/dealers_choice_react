@@ -13,6 +13,13 @@ app.get('/api/heroes', async(req, res, next) => {
         next(err);
     }
 })
+app.get('/api/games', async(req, res, next) => {
+    try {
+        res.send(await Game.findAll());
+    } catch(err) {
+        next(err);
+    }
+})
 
 app.get('/', async(req, res, next) => {
     res.sendFile(path.join(__dirname, '.', 'client', 'index.html'));
