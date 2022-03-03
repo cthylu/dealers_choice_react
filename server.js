@@ -1,52 +1,31 @@
-const Sequelize = require('sequelize');
-const db = new Sequelize('postgres://localhost/dealers_choice_react', {logging: false});
+const express = require('express');
+const app = express();
+const path = require('path');
+const {db, seedDb, Hero, Game} = require('./db');
+const port = 3000;
 
-const Hero = db.define('hero', {
-    name: {
-        type: Sequelize.STRING(20),
-        allowNull: false
-    },
-    weaponType: {
-        type: Sequelize.ENUM('Sword', 'Lance', 'Axe', 'Tome'),
-        allowNull: false
-    }
-});
-
-const Game = db.define('game', {
-    name: {
-        type: Sequelize.STRING(40),
-        allowNull: false
-    },
-    year: {
-        type: Sequelize.INTEGER
-    }
-});
-
-Hero.belongsTo(Game);
-Game.hasMany(Hero);
-
-async function seedDb() {
+app.get('/api/heroes', async(req, res, next) => {
     try {
-        await db.sync({force: true});
-        const FE_ME = await Game.create({name: 'Fire Emblem: Mystery of the Emblem', year: 1994});
-        const FE_BB = await Game.create({name: 'Fire Emblem: The Blazing Blade', year: 2003});
-        const FE_SS = await Game.create({name: 'Fire Emblem: The Sacred Stones', year: 2004});
-        const FE_A = await Game.create({name: 'Fire Emblem: Awakening', year: 1994});
+        res.send(await Hero.findAll());
+    } catch(err) {
+        next(err);
+    }
+})
 
-        await Hero.create({name: 'Marth', weaponType: 'Sword', gameId: FE_ME.id});
-        await Hero.create({name: 'Eliwood', weaponType: 'Sword', gameId: FE_BB.id});
-        await Hero.create({name: 'Hector', weaponType: 'Axe', gameId: FE_BB.id});
-        await Hero.create({name: 'Ephraim', weaponType: 'Lance', gameId: FE_SS.id});
-        await Hero.create({name: 'Tharja', weaponType: 'Tome', gameId: FE_A.id});
+app.get('/', async(req, res, next) => {
+    res.sendFile(path.join(__dirname, '.', 'client', 'index.html'));
+});
 
-        
+async function start() {
+    try {
+        await db.authenticate();
+        await seedDb();
+        app.listen(port, function() {
+            console.log(`Listening on port ${port}!`);
+        })
     } catch(err) {
         console.log(err);
     }
 }
 
-seedDb();
-
-module.exports = {
-    Hero, Game
-};
+start();
